@@ -24,4 +24,4 @@ int main(int argc, char **argv)
     //cout << "shit works" << endl;
     return 0;
 }
-//g++ main.cc CommandBase.cc CommandComment.cc CommandContainer.cc CommandLine.cc CommandObject.cc Tokenizer.cpp -Wall -Werror -o a.out
+//g++ main.cc CommandBase.cc CommandComment.cc CommandContainer.cc CommandLine.cc CommandObject.cc Tokenizer.cc -Wall -Werror -o a.out

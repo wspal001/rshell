@@ -6,7 +6,7 @@
 #define CommandLine_hh
 #include "CommandContainer.hh"
 #include "CommandObject.hh"
-#include "Tokenizer.h"
+#include "Tokenizer.hh"
 #include <sys/types.h>
 #include <pwd.h>
 #include <stdio.h>

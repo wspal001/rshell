@@ -6,3 +6,9 @@ Known Bugs
 ---------------------
 * If exit appears anywhere before a comment, the prompt will exit. (still executes commands)
 * Only commands in the use/bin/ directory work.
+
+---------------------
+
+tests can be found in the tests directory
+
+---------------------

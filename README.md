@@ -4,6 +4,5 @@ The purpose of this program is run a command shell. It should be used when you w
 
 Known Bugs
 ---------------------
-* If exit appears anywhere before a comment, the prompt will exit.
+* If exit appears anywhere before a comment, the prompt will exit. (still executes commands)
 * Only commands in the use/bin/ directory work.
-

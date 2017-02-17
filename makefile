@@ -1,6 +1,4 @@
-CC=g++
-CFLAGS=-Wall -Werror -ansi -pedantic 
-
 all:
-
+	+$(MAKE) -C src
 rshell:
+	+$(MAKE) -C src

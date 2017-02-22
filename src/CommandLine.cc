@@ -39,10 +39,11 @@ bool CommandLine::takeInput()
     runCommands();
     return noExit;
 }
-void CommandLine::runCommands()
+bool CommandLine::runCommands()
 {
     //run command
     CommandsToRun.execute();
+    return false;
 }
 bool CommandLine::parseInput()
 {

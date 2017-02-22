@@ -21,7 +21,7 @@ class CommandLine
         CommandLine();
         ~CommandLine();
         bool takeInput();
-        void runCommands();
+        bool runCommands();
         bool parseInput();
     private:
         std::string inputString;

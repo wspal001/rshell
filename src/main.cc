@@ -10,6 +10,7 @@
     #include "CommandComment.hh"
     #include "CommandObject.hh"
 #include "CommandLine.hh"
+#include "CommandFactory.hh"
 
 using namespace std;
 

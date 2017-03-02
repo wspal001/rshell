@@ -39,7 +39,7 @@ bool CommandLine::takeInput()
 bool CommandLine::runCommands()
 {
     //run command
-    CommandsToRun.execute();
+    if(CommandsToRun.execute() == -1) {return false;}
     return true; //returns false if exiting
 }
 bool CommandLine::parseInput()
@@ -51,36 +51,215 @@ bool CommandLine::parseInput()
     //std::cout << "no comments: " << noComments << std::endl;
     bool exiting = false;
     
-    std::vector<std::string> guarenteedCommands; //string forms of each command
-    std::string token;
-    input.setString(noComments);
-    input.setDelimiter(";");
-    while((token = input.next()) != "")
-    {
-        guarenteedCommands.push_back(token);
-        
-    }
-    //create command objects
-    for(unsigned i = 0; i < guarenteedCommands.size() ; i++)
-    {
-        
-    }
-    return exiting;
-    //std::cout << std::endl;
+    CommandsToRun.addCommand(createNewCommand(noComments));
     
+    return exiting;
+
 }
-/*
+
 CommandBase* CommandLine::createNewCommand(std::string commandString)
 {
+    CommandContainer * CreatedCommands = new CommandContainer;
     
-    switch (commandString)
+    std::string formattedString = formatForCreatingCommands(commandString);
+    //std::cout << formattedString << std::endl;
+    Tokenizer tokenizedString(formattedString);
+    tokenizedString.setDelimiter(",");
+    std::string token;
+    std::vector<CommandContainer*> currentCommandStack;
+    currentCommandStack.push_back(CreatedCommands);
+    //int endContainer = 0;
+    while((token = tokenizedString.next()) != "")
     {
-        case <#constant#>:
-            <#statements#>
-            break;
+        if(token == "(")
+        {
+            CommandContainer* subContainer = new CommandContainer;
+            bool full = currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(subContainer);
+            if(full)
+            {
+                //std::cout << "container full" << std::endl;
+                currentCommandStack.pop_back();
+            }
+            currentCommandStack.push_back(subContainer);
+            //std::cout << token << "new sub container made" << std::endl;
+        }
+        else if(token == ")")
+        {
+            currentCommandStack.pop_back();
+            //std::cout << token << "new sub container closed" << std::endl;
+        }
+        else if(token == "[")
+        {
+            CommandContainer* subContainer = new CommandTest;
+            bool full = currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(subContainer);
+            if(full)
+            {
+                std::cout << "container full" << std::endl;
+                currentCommandStack.pop_back();
+            }
+            currentCommandStack.push_back(subContainer);
+            //std::cout << token << "new test container made" << std::endl;
+        }
+        else if(token == "]")
+        {
+            currentCommandStack.pop_back();
+            //std::cout << token << "new test container ended" << std::endl;
+        }
+        else if(token == ";")
+        {
+            //std::cout << token << "nothing" << std::endl;
+        }
+        else if(token == "&&")
+        {
+            CommandContainer* andContainer = new AndCommand;
+            andContainer->addCommand(currentCommandStack.at(currentCommandStack.size() - 1)->removeLastCommand());
             
-        default:
-            break;
+            currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(andContainer);
+            
+            currentCommandStack.push_back(andContainer);
+            //endContainer += 2;
+            //std::cout << token << "new and container made" << std::endl;
+        }
+        else if(token == "||")
+        {
+            CommandContainer* OrContainer = new OrCommand;
+            OrContainer->addCommand(currentCommandStack.at(currentCommandStack.size() - 1)->removeLastCommand());
+            
+            currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(OrContainer);
+            
+            currentCommandStack.push_back(OrContainer);
+            //endContainer += 2;
+            //std::cout << token << "new or container made" << std::endl;
+        }
+        else
+        {
+            //need to check for special commands
+            CommandBase* defaultCommand = createSpecialCommands(token);
+            if(currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(defaultCommand))
+            {
+                //std::cout << "container full" << std::endl;
+                currentCommandStack.pop_back();
+            }
+            //std::cout << token << "new defult made" << std::endl;
+        }
+        
     }
+    
+    return CreatedCommands;
 }
-*/
+
+
+
+std::string CommandLine::formatForCreatingCommands(std::string stringToFormat)
+{
+    std::string parseChar = ",";
+    int startingParens = 0;
+    int endingPraens = 0;
+    int startinBrackets = 0;
+    int endingBrackets = 0;
+    for(unsigned int i = 0 ; i < stringToFormat.size() ; i++)
+    {
+        if(stringToFormat.size() < 2)
+        {
+            return "ERROR command not found";
+        }
+        switch (stringToFormat[i])
+        {
+            case '(':
+                stringToFormat.insert((i + 1), parseChar);
+                stringToFormat.insert(i, parseChar);
+                i++;
+                startingParens++;
+                break;
+                
+            case ')':
+                stringToFormat.insert((i + 1), parseChar);
+                stringToFormat.insert(i, parseChar);
+                i++;
+                endingPraens++;
+                break;
+            case ';':
+                stringToFormat.insert((i + 1), parseChar);
+                stringToFormat.insert(i, parseChar);
+                i++;
+                break;
+            case '&':
+                if((i == stringToFormat.size() - 1) || stringToFormat.at(i + 1) != '&')
+                {
+                    return "ERROR expected second &";
+                }
+                stringToFormat.insert((i + 2), parseChar);
+                stringToFormat.insert(i, parseChar);
+                i += 2;
+                break;
+            case '|':
+                if((i == stringToFormat.size() - 1) || stringToFormat.at(i + 1) != '|')
+                {
+                    return "ERROR expected second |";
+                }
+                stringToFormat.insert((i + 2), parseChar);
+                stringToFormat.insert(i, parseChar);
+                i += 2;
+                break;
+            case '[':
+                stringToFormat.insert((i + 1), parseChar);
+                stringToFormat.insert(i, parseChar);
+                i++;
+                startinBrackets++;
+                break;
+            case ']':
+                stringToFormat.insert((i + 1), parseChar);
+                stringToFormat.insert(i, parseChar);
+                i++;
+                endingBrackets++;
+                break;
+                
+            default:
+                //i++;
+                break;
+        }
+        //std::cout << stringToFormat << std::endl;
+    }
+    if(startingParens != endingPraens)
+    {
+        return "ERROR starting parenthesies does not match ending parenthisis";
+    }
+    if(startinBrackets != endingBrackets)
+    {
+        return "ERROR starting brackets does not match ending brackets";
+    }
+    return stringToFormat;
+}
+
+CommandBase* CommandLine::createSpecialCommands(std::string string)
+{
+    Tokenizer givenString(string);
+    std::string subtoken = givenString.next(); //gets first word of command
+    if(subtoken == "exit")
+    {
+        //create quitCommand
+        CommandBase* newBase = new CommandQuit;
+        return newBase;
+    }
+    else if(subtoken == "test")
+    {
+        //create testCommand
+        CommandBase* newBase = new CommandTest(string);
+        return newBase;
+    }
+    else if(subtoken == "ERROR")
+    {
+        //create ErrorCommand
+        CommandBase* newBase = new ErrorCommand(string);
+        return newBase;
+    }
+    else
+    {
+        //create defultCommand
+        CommandBase* newBase = new CommandObject(string);
+        return newBase;
+    }
+    CommandBase* newBase = new ErrorCommand("ERROR no command created");
+    return newBase;
+}
+

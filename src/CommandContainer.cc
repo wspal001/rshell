@@ -6,7 +6,7 @@
 
 CommandContainer::CommandContainer()
 {
-
+    maxSize = std::numeric_limits<int>::max();
 }
 CommandContainer::~CommandContainer()
 {
@@ -19,17 +19,29 @@ CommandContainer::~CommandContainer()
 }
 int CommandContainer::execute()
 {
+    //std::cout << "container execute called" << std::endl;
     int success = 0;
     for(unsigned i = 0; i < CommandList.size() ; i++)
     {
         success = CommandList.at(i)->execute();
-        delete(CommandList.at(i));
-        if(!success) {}
+        //delete(CommandList.at(i));
+        if(success == -1) {return success;}
     }
     CommandList.clear();
     return success;
 }
-void CommandContainer::addCommand(CommandBase* newCommand)
+bool CommandContainer::addCommand(CommandBase* newCommand)
 {
     CommandList.push_back(newCommand);
+    return full();
+}
+CommandBase* CommandContainer::removeLastCommand()
+{
+    CommandBase* target = CommandList.at(CommandList.size() - 1);
+    CommandList.pop_back();
+    return target;
+}
+bool CommandContainer::full()
+{
+    return (CommandList.size() >= maxSize);
 }

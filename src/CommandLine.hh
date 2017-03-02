@@ -6,9 +6,12 @@
 #define CommandLine_hh
 #include "CommandContainer.hh"
     #include "CommandTest.hh"
+    #include "AndCommand.hh"
+    #include "OrCommand.hh"
 #include "CommandObject.hh"
     #include "CommandQuit.hh"
-#include "CommandFactory.hh"
+    #include "ErrorCommand.hh"
+#include "CommandFactory.hh" //doesn't do anything
 
 #include "Tokenizer.hh"
 #include <sys/types.h>
@@ -28,6 +31,8 @@ class CommandLine
         bool runCommands();
         bool parseInput();
         CommandBase* createNewCommand(std::string commandString);
+        std::string formatForCreatingCommands(std::string stringToFormat);
+        CommandBase* createSpecialCommands(std::string string);
     private:
         std::string inputString;
         //std::vector<std::string> directoryList;

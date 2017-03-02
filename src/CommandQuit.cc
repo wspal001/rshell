@@ -1,4 +1,4 @@
-#include \“CommandQuit.hh\”
+#include "CommandQuit.hh"
 CommandQuit::CommandQuit()
 {
 
@@ -9,5 +9,6 @@ CommandQuit::~CommandQuit()
 }
 int CommandQuit::execute()
 {
-    return 0;
+    //std::cout << "quitting" << std::endl;
+    return -1;
 }

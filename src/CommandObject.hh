@@ -5,6 +5,7 @@
 #ifndef CommandObject_hh
 #define CommandObject_hh
 #include "CommandBase.hh"
+#include <fstream>
 
 class CommandObject : public CommandBase
 {
@@ -16,7 +17,9 @@ class CommandObject : public CommandBase
         std::string getStringForm();
         void setStringForm(std::string name);
         int execute();
-    private:
+    protected:
         std::string stringForm;
 };
+
+#include "CommandLine.hh"
 #endif

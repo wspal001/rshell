@@ -1,12 +1,18 @@
 #ifndef CommandTest_hh
 #define CommandTest_hh
-#include "CommandContainer.hh"
-class CommandTest : public CommandContainer
+#include "CommandObject.hh"
+
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+class CommandTest : public CommandObject
 {
 public:
     CommandTest();
     ~CommandTest();
     CommandTest(std::string string);
+    int execute();
 private:
 };
 #endif

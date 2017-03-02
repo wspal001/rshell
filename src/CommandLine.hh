@@ -20,14 +20,14 @@
 #include <unistd.h>
 #include <iostream>
 #include <string.h>
-
+#include <fstream>
 
 class CommandLine
 {
     public:
         CommandLine();
         ~CommandLine();
-        bool takeInput();
+    bool takeInput(std::istream & inputstream);
         bool runCommands();
         bool parseInput();
         CommandBase* createNewCommand(std::string commandString);

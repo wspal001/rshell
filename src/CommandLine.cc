@@ -12,23 +12,27 @@ CommandLine::~CommandLine()
 {
     
 }
-bool CommandLine::takeInput()
+bool CommandLine::takeInput(std::istream & inputstream)
 {
     //get user info
-    char hostname[1024];
-    int result = gethostname(hostname, 1024);
-    passwd* username = getpwuid(getuid());
-    
-    if(username == NULL || result != 0)
+    //std::cout << "taking input" << std::endl;
+    if(&inputstream == &std::cin)
     {
-        std::cout << "$ ";
-    }
-    else
-    {
-        std::cout << username->pw_name << "@" << hostname << "$ ";
+        char hostname[1024];
+        int result = gethostname(hostname, 1024);
+        passwd* username = getpwuid(getuid());
+    
+        if(username == NULL || result != 0)
+        {
+            std::cout << "$ ";
+        }
+        else
+        {
+            std::cout << username->pw_name << "@" << hostname << "$ ";
+        }
     }
     
-    std::getline(std::cin, inputString);
+    std::getline(inputstream, inputString);
     //std::cout << "test test test test" << std::endl;
     if(inputString == "exit") {return false;}
     
@@ -88,6 +92,7 @@ CommandBase* CommandLine::createNewCommand(std::string commandString)
             currentCommandStack.pop_back();
             //std::cout << token << "new sub container closed" << std::endl;
         }
+        /*
         else if(token == "[")
         {
             CommandContainer* subContainer = new CommandTest;
@@ -105,6 +110,7 @@ CommandBase* CommandLine::createNewCommand(std::string commandString)
             currentCommandStack.pop_back();
             //std::cout << token << "new test container ended" << std::endl;
         }
+         */
         else if(token == ";")
         {
             //std::cout << token << "nothing" << std::endl;
@@ -133,7 +139,7 @@ CommandBase* CommandLine::createNewCommand(std::string commandString)
         }
         else
         {
-            //need to check for special commands
+            //creates and non-container command
             CommandBase* defaultCommand = createSpecialCommands(token);
             if(currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(defaultCommand))
             {
@@ -161,7 +167,7 @@ std::string CommandLine::formatForCreatingCommands(std::string stringToFormat)
     {
         if(stringToFormat.size() < 2)
         {
-            return "ERROR command not found";
+            return "ERROR please enter a command";
         }
         switch (stringToFormat[i])
         {
@@ -202,14 +208,14 @@ std::string CommandLine::formatForCreatingCommands(std::string stringToFormat)
                 i += 2;
                 break;
             case '[':
-                stringToFormat.insert((i + 1), parseChar);
-                stringToFormat.insert(i, parseChar);
+                stringToFormat.insert((i + 1), " ");
+                //stringToFormat.insert(i, parseChar);
                 i++;
                 startinBrackets++;
                 break;
             case ']':
-                stringToFormat.insert((i + 1), parseChar);
-                stringToFormat.insert(i, parseChar);
+                //stringToFormat.insert((i + 1), parseChar);
+                stringToFormat.insert(i, " ");
                 i++;
                 endingBrackets++;
                 break;
@@ -241,7 +247,7 @@ CommandBase* CommandLine::createSpecialCommands(std::string string)
         CommandBase* newBase = new CommandQuit;
         return newBase;
     }
-    else if(subtoken == "test")
+    else if(subtoken == "test" || subtoken == "[")
     {
         //create testCommand
         CommandBase* newBase = new CommandTest(string);
@@ -250,6 +256,7 @@ CommandBase* CommandLine::createSpecialCommands(std::string string)
     else if(subtoken == "ERROR")
     {
         //create ErrorCommand
+        //std::cout << "quit command created" << std::endl;
         CommandBase* newBase = new ErrorCommand(string);
         return newBase;
     }

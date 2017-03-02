@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 {
     CommandLine* activeLine = new CommandLine();
     //std::vector<CommandBase*> validCommands;
-    while( activeLine->takeInput() )
+    while( activeLine->takeInput(std::cin) )
     {
         //std::cout << "inside While loop" << std::endl;
     }

@@ -39,7 +39,7 @@ int CommandTest::execute()
 {
     //returns zero if exists 1 if it doesn't
     struct stat sb;
-    std::cout << "testing" << stringForm << std::endl;
+    //std::cout << "testing " << stringForm << std::endl;
 
     if(stat(stringForm.c_str() , &sb) == -1)
     {

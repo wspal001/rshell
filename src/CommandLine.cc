@@ -54,9 +54,9 @@ bool CommandLine::parseInput()
     std::string noComments = input.next();
     //std::cout << "no comments: " << noComments << std::endl;
     bool exiting = false;
-    
+    //std::cout << "started making commands" << std::endl;
     CommandsToRun.addCommand(createNewCommand(noComments));
-    
+    //std::cout << "finished making commands" << std::endl;
     return exiting;
 
 }
@@ -64,9 +64,9 @@ bool CommandLine::parseInput()
 CommandBase* CommandLine::createNewCommand(std::string commandString)
 {
     CommandContainer * CreatedCommands = new CommandContainer;
-    
+    //std::cout << "started formatting commands" << std::endl;
     std::string formattedString = formatForCreatingCommands(commandString);
-    //std::cout << formattedString << std::endl;
+    //std::cout << "finished formatting commands" << std::endl;
     Tokenizer tokenizedString(formattedString);
     tokenizedString.setDelimiter(",");
     std::string token;
@@ -75,7 +75,11 @@ CommandBase* CommandLine::createNewCommand(std::string commandString)
     //int endContainer = 0;
     while((token = tokenizedString.next()) != "")
     {
-        if(token == "(")
+        if(token.find_first_not_of(" ") == std::string::npos)
+        {
+            tokenizedString.next();
+        }
+        else if(token == "(")
         {
             CommandContainer* subContainer = new CommandContainer;
             bool full = currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(subContainer);
@@ -92,28 +96,18 @@ CommandBase* CommandLine::createNewCommand(std::string commandString)
             currentCommandStack.pop_back();
             //std::cout << token << "new sub container closed" << std::endl;
         }
-        /*
-        else if(token == "[")
-        {
-            CommandContainer* subContainer = new CommandTest;
-            bool full = currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(subContainer);
-            if(full)
-            {
-                std::cout << "container full" << std::endl;
-                currentCommandStack.pop_back();
-            }
-            currentCommandStack.push_back(subContainer);
-            //std::cout << token << "new test container made" << std::endl;
-        }
-        else if(token == "]")
-        {
-            currentCommandStack.pop_back();
-            //std::cout << token << "new test container ended" << std::endl;
-        }
-         */
         else if(token == ";")
         {
             //std::cout << token << "nothing" << std::endl;
+            /*
+            CommandObject* empty = new CommandObject("");
+            bool full = currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(empty);
+            if(full)
+            {
+                //std::cout << "container full" << std::endl;
+                currentCommandStack.pop_back();
+            }
+            */
         }
         else if(token == "&&")
         {

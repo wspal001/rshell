@@ -77,7 +77,7 @@ CommandBase* CommandLine::createNewCommand(std::string commandString)
     {
         if(token.find_first_not_of(" ") == std::string::npos)
         {
-            tokenizedString.next();
+            //tokenizedString.next();
         }
         else if(token == "(")
         {
@@ -100,7 +100,7 @@ CommandBase* CommandLine::createNewCommand(std::string commandString)
         {
             //std::cout << token << "nothing" << std::endl;
             /*
-            CommandObject* empty = new CommandObject("");
+            CommandObject* empty = new CommandObject("  ");
             bool full = currentCommandStack.at(currentCommandStack.size() - 1)->addCommand(empty);
             if(full)
             {

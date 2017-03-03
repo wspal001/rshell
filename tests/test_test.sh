@@ -7,3 +7,4 @@ echo tests/bad.sh ; [-d tests/bad.sh] ; echo is not not a directory
 echo tests ; [tests] ; echo exists
 echo tests ; [-f tests] ; echo is not a file
 echo tests ; [-d tests] ; echo is a directory
+exit

@@ -17,6 +17,6 @@ class CommandContainer : public CommandBase
         bool full();
     protected:
         std::vector<CommandBase*> CommandList;
-        int maxSize;
+        unsigned int maxSize;
 };
 #endif

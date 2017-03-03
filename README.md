@@ -6,6 +6,8 @@ Known Bugs
 ---------------------
 * If exit appears anywhere before a comment, the prompt will exit. (still executes commands) [FIXED]
 * Only commands in the use/bin/ directory work.
+* If multiple parameters are given to "test" only the final parameter will be used.
+* If multiple arguments are given to "test" only the final argument will be used.
 
 ---------------------
 

@@ -14,5 +14,8 @@ public:
     CommandTest(std::string string);
     int execute();
 private:
+    bool e;
+    bool f;
+    bool d;
 };
 #endif

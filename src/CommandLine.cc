@@ -195,11 +195,14 @@ std::string CommandLine::formatForCreatingCommands(std::string stringToFormat)
             case '|':
                 if((i == stringToFormat.size() - 1) || stringToFormat.at(i + 1) != '|')
                 {
-                    return "ERROR expected second |";
+                    //return "ERROR expected second |";
                 }
+                else
+                {
                 stringToFormat.insert((i + 2), parseChar);
                 stringToFormat.insert(i, parseChar);
                 i += 2;
+                }
                 break;
             case '[':
                 stringToFormat.insert((i + 1), " ");

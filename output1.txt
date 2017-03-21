@@ -1,9 +1,0 @@
-license.txt
-readme.md
-bin
-makefile
-output1.txt
-output2.txt
-src
-testfile2.txt
-tests

@@ -10,7 +10,7 @@ CommandObject::CommandObject()
 CommandObject::CommandObject(std::string name)
 {
     int start = name.find_first_not_of(" ");
-    if(start == std::string::npos){stringForm = " "; return;}
+    if(name.find_first_not_of(" ") == std::string::npos){stringForm = " "; return;}
     unsigned int end = name.find_last_not_of(" ");
     unsigned int range = end - start + 1;
     stringForm = name.substr(start,range);
